@@ -1,24 +1,23 @@
  {
-    "name": "Getting Started Example",
+    "name": "Task Timer",
     "version": "1.0",
-    "description": "Build an Extension!",
-    "permissions": ["storage"],
+    "description": "Track work time and log in google sheets",
+    "permissions": [],
     "background": {
       "scripts": ["background.js"],
       "persistent": false
     },
   	"browser_action": {
       	"default_icon": {                    // optional
-        	"16": "images/get_started16.png"           // optional
+        	"16": "images/clock_16.png"           // optional
       	},
-      	"default_title": "Google Mail",      // optional; shown in tooltip
       	"default_popup": "popup.html"        // optional
     },
     "icons": {
-      "16": "images/get_started16.png",
-      "32": "images/get_started32.png",
-      "48": "images/get_started48.png",
-      "128": "images/get_started128.png"
+      "16": "images/clock_16.png",
+      "32": "images/clock_32.png",
+      "48": "images/clock_48.png",
+      "128": "images/clock_128.png"
     },
     "manifest_version": 2
   }
