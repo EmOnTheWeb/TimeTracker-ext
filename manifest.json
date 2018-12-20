@@ -2,7 +2,7 @@
     "name": "Task Timer",
     "version": "1.0",
     "description": "Track work time and log in google sheets",
-    "permissions": [],
+    "permissions": ["storage"],
     "background": {
       "scripts": ["background.js"],
       "persistent": false
