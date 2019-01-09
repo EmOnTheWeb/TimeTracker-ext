@@ -1,22 +1,11 @@
 let startBtn = document.getElementById('start-btn');
-
+ 
 startBtn.onclick = async function(element) {
-
-    const AUTH_TOKEN = await getAuthToken().catch((err) => { 
-        //no AUTH_TOKEN 
-        authenticateWGoogle(); 
-    
-    }); 
-
-    console.log(AUTH_TOKEN); 
   
-
 	let client = document.getElementById('client').value; 
 	let description = document.getElementById('description').value; 
 	
 	let timeStart = new Date().toTimeString(); 
-	
-
   	tStartArray = timeStart.split(':'); 
     tStartFormatted = tStartArray[0] + ':' + tStartArray[1]; 
 
@@ -26,6 +15,20 @@ startBtn.onclick = async function(element) {
     displayValues(jobVals); 
 
 };
+
+let body = document.getElementsByTagName('body')[0]; 
+body.addEventListener('click',async function(e){
+    if(e.target && e.target.id== 'end-btn'){
+        const AUTH_TOKEN = await getAuthToken().catch((err) => { 
+        //no AUTH_TOKEN 
+        authenticateWGoogle(); 
+    
+    }); 
+
+    console.log(AUTH_TOKEN); 
+
+    }
+ }); 
 
 function getAuthToken() {
    
