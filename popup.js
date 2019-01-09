@@ -7,6 +7,8 @@ startBtn.onclick = async function(element) {
         authenticateWGoogle(); 
     
     }); 
+
+    console.log(AUTH_TOKEN); 
   
 
 	let client = document.getElementById('client').value; 

@@ -21,8 +21,8 @@ function openAuthTab() {
               
                 if(tab.title.indexOf('id_token=') > -1) {
 
-                    var titleParts = tab.title.split(' ', 2);
-                    const TOKEN = titleParts[1]; 
+                    let tokenKeyValue = tab.title.split(' ',2)[1]; 
+                    const TOKEN = tokenKeyValue.split('=')[1]; 
 
                     chrome.tabs.onUpdated.removeListener(googleAuthorizationHook);
                     chrome.tabs.remove(tabId); 
