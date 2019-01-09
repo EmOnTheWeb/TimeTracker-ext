@@ -13,47 +13,29 @@ function openAuthTab() {
               '&redirect_uri=' + redirectUri + 
               '&scope=' + scopes;
 
-    var RESULT_PREFIX = ['Success', 'Denied', 'Error'];
     chrome.tabs.create({'url': 'about:blank'}, function(authenticationTab) {
-        console.log('i create'); 
+
         chrome.tabs.onUpdated.addListener(function googleAuthorizationHook(tabId, changeInfo, tab) {
             
-            console.log('this fires');
-
             if (tabId === authenticationTab.id) {
-                var titleParts = tab.title.split(' ', 2);
+              
+                if(tab.title.indexOf('id_token=') > -1) {
 
-                var result = titleParts[0];
-                if (titleParts.length == 2 && RESULT_PREFIX.indexOf(result) >= 0) {
+                    var titleParts = tab.title.split(' ', 2);
+                    const TOKEN = titleParts[1]; 
+
                     chrome.tabs.onUpdated.removeListener(googleAuthorizationHook);
-                    chrome.tabs.remove(tabId);
+                    chrome.tabs.remove(tabId); 
 
-                    var response = titleParts[1];
-                    alert(response); 
-                    switch (result) {
-                        case 'Success':
-                            // Example: id_token=<YOUR_BELOVED_ID_TOKEN>&authuser=0&hd=<SOME.DOMAIN.PL>&session_state=<SESSION_SATE>&prompt=<PROMPT>
-                            alert('success'); 
-                            alert(response); 
-                        break;
-                        case 'Denied':
-                            // Example: error_subtype=access_denied&error=immediate_failed
-                            alert('denied'); 
-                            alert(response); 
-                        break;
-                        case 'Error':
-                        	alert('error'); 
-                            // Example: 400 (OAuth2 Error)!!1
-                            console.log(response);
-                        break;
-                    }
+                    chrome.storage.local.set({ "auth_token": TOKEN }, function(){
+                        //console.log('token stored'); 
+                    });
                 }
             }
         });
 
         chrome.tabs.update(authenticationTab.id, {'url': url});
     });
-
 }
 
 

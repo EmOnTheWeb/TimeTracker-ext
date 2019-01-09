@@ -1,8 +1,14 @@
 let startBtn = document.getElementById('start-btn');
 
-startBtn.onclick = function(element) {
+startBtn.onclick = async function(element) {
+
+    const AUTH_TOKEN = await getAuthToken().catch((err) => { 
+        //no AUTH_TOKEN 
+        authenticateWGoogle(); 
     
-    googleAuth(); 
+    }); 
+  
+
 	let client = document.getElementById('client').value; 
 	let description = document.getElementById('description').value; 
 	
@@ -19,13 +25,25 @@ startBtn.onclick = function(element) {
 
 };
 
-function googleAuth() {
+function getAuthToken() {
+   
+    return new Promise((resolve,reject) => {       
+        chrome.storage.local.get(["auth_token"], function(items){
+            if(items.hasOwnProperty("auth_token")) {
+             
+                resolve(items["auth_token"]);
+
+            }
+            else {
+                reject(); 
+            } 
+        });
+    })   
+}
+
+function authenticateWGoogle() {
 
     chrome.extension.getBackgroundPage().openAuthTab();
-
-	// Copyright 2018 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
 
 }
 
