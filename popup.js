@@ -2,6 +2,7 @@ let startBtn = document.getElementById('start-btn');
 
 startBtn.onclick = function(element) {
     
+    googleAuth(); 
 	let client = document.getElementById('client').value; 
 	let description = document.getElementById('description').value; 
 	
@@ -17,6 +18,16 @@ startBtn.onclick = function(element) {
     displayValues(jobVals); 
 
 };
+
+function googleAuth() {
+
+    chrome.extension.getBackgroundPage().openAuthTab();
+
+	// Copyright 2018 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+}
 
 function saveValues(vals) {
 

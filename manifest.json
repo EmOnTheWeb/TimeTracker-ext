@@ -1,17 +1,27 @@
  {
     "name": "Task Timer",
+    "key":"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoMSc2w8bkII0HLua0HX9aV42xDugQp1tRBxxNM0EvqKKbdJtEIYibGEpgkhhbx1UKochkBdeC3nrEJ9+lso6M7ukeuIr4ywFplXEg62a+UKjP2qZ5JWIIBD8MA2ggCFPFEZvBAemm29W16F3eflM6TJXQZ8rLiRTdeyTgj0QsviP9zlmlffdLRorUp8WK5mITqqmCshICNnOt4+Wn2geFI1jMgdcNb5AbhJKV5e9eAStZ4VJtsp+P/yiPeNCJe7FfV5aO1Gf0t9Ez/3r4e9Ag+7F/VvhzZbNH4iuHGeCQ1hoxFkMXXgnh45CJgzHknJHmnvPrw2zvHBlc4I8Y/9l2wIDAQAB", 
+    "oauth2": {
+        "client_id": "936014391451-p06hnofi9aa6jojna8apfrv3rkj3mu7t.apps.googleusercontent.com",
+        "scopes":["https://www.googleapis.com/auth/spreadsheets"]
+    },
     "version": "1.0",
     "description": "Track work time and log in google sheets",
-    "permissions": ["storage"],
+    "permissions": [
+        "storage",
+        "tabs",
+        "https://ssl.gstatic.com/",
+        "https://www.googleapis.com/",
+        "https://accounts.google.com/"],
     "background": {
       "scripts": ["background.js"],
       "persistent": false
     },
   	"browser_action": {
-      	"default_icon": {                    // optional
-        	"16": "images/clock_16.png"           // optional
+      	"default_icon": {
+        	"16": "images/clock_16.png" 
       	},
-      	"default_popup": "popup.html"        // optional
+      	"default_popup": "popup.html" 
     },
     "icons": {
       "16": "images/clock_16.png",
