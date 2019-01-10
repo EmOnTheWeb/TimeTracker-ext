@@ -1,6 +1,20 @@
+
+//if there is current job - show that
+//else show display one 
+
+if(false) {
+
+
+
+}else {
+    let displayOne = document.getElementById('display-one'); 
+    displayOne.style.display = 'block';
+}
+
+
 let startBtn = document.getElementById('start-btn');
- 
-startBtn.onclick = async function(element) {
+
+startBtn.onclick = function(element) {
   
 	let client = document.getElementById('client').value; 
 	let description = document.getElementById('description').value; 
