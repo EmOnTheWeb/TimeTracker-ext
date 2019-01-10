@@ -9,6 +9,7 @@
     "description": "Track work time and log in google sheets",
     "permissions": [
         "storage",
+        "identity",
         "tabs",
         "https://ssl.gstatic.com/",
         "https://www.googleapis.com/",
