@@ -1,18 +1,28 @@
-
+ 
 //if there is current job - show that
 //else show display one 
 
-if(false) {
+(function () {
 
+    onAJob().then((jobDetails) => {
 
+        displayValues(jobDetails);   
 
-}else {
-    let displayOne = document.getElementById('display-one'); 
-    displayOne.style.display = 'block';
-}
+    },
+    () => {
+        //no job 
+        let displayOne = document.getElementById('display-one'); 
+        displayOne.style.display = 'block';
 
+        document.getElementById('client').value = ''; 
+        document.getElementById('description').value = ''; 
+
+    }); 
+})();
 
 let startBtn = document.getElementById('start-btn');
+let displayOne = document.getElementById('display-one'); 
+let displayTwo = document.getElementById('display-two'); 
 
 startBtn.onclick = function(element) {
   
@@ -33,27 +43,37 @@ startBtn.onclick = function(element) {
 let body = document.getElementsByTagName('body')[0]; 
 body.addEventListener('click',async function(e){
     if(e.target && e.target.id== 'end-btn'){
-        const AUTH_TOKEN = await getAuthToken().catch((err) => { 
-        //no AUTH_TOKEN 
-        authenticateWGoogle(); 
-    
-    }); 
-
-    console.log(AUTH_TOKEN); 
+            const AUTH_TOKEN = await getAuthToken().catch((err) => { 
+            //no AUTH_TOKEN 
+            authenticateWGoogle(); 
+        
+        }); 
+    }
+    if(e.target && e.target.id=='icon-cancel') {
+        
+        chrome.storage.local.remove('current_job'); 
+        displayTwo.style.display = 'none'; 
+        displayOne.style.display = 'block'; 
 
     }
  }); 
 
+
+
 function getAuthToken() {
    
     return new Promise((resolve,reject) => {       
-        chrome.storage.local.get(["auth_token"], function(items){
-            if(items.hasOwnProperty("auth_token")) {
-             
-                resolve(items["auth_token"]);
+        chrome.storage.local.get(['auth_token'], function(items){
+            if(items) {
+                if(items.hasOwnProperty('auth_token')) {
+                 
+                    resolve(items['auth_token']);
 
-            }
-            else {
+                }
+                else {
+                    reject(); 
+                }
+            } else {
                 reject(); 
             } 
         });
@@ -68,23 +88,35 @@ function authenticateWGoogle() {
 
 function saveValues(vals) {
 
-	chrome.storage.local.set({'current-job': vals}, function() {
+	chrome.storage.local.set({'current_job': vals}, function() {
         // console.log('Value is set to ' + JSON.stringify(vals));
     });
+}
 
-   // chrome.storage.local.get(['current-job'], function(result) {
-   //    console.log('Value currently is ' + JSON.stringify(result));
-   //  });
+function onAJob() {
+    return new Promise((resolve,reject) => {
+        chrome.storage.local.get(['current_job'], function(items) {
+            if(items) {
+                if(items.hasOwnProperty('current_job')) { 
+                    resolve(items['current_job']);
+                }
+                else {
+                    reject(false); 
+                }
+            }
+            else {
+                reject(false); 
+            }
+        });
+    })
 }
 
 function displayValues(vals) {
 
-	let displayOne = document.getElementById('display-one'); 
-	displayOne.style.display = 'none';
 
-	let displayTwo = document.getElementById('display-two'); 
+	displayOne.style.display = 'none';
 	
-	let insert = "<span id='icon-cancel'>x</span>"; 
+    let insert = "<span id='icon-cancel'>x</span>"; 
 
 	if(vals.client !== '') {  insert += '<p><span>Client</span>' + vals.client + '</p>'}; 
 	if(vals.description !== '') insert += '<p><span>Description</span>' + vals.description + '</p>'; 
