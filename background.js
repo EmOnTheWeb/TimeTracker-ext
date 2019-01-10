@@ -18,7 +18,7 @@ function openAuthTab() {
         chrome.tabs.onUpdated.addListener(function googleAuthorizationHook(tabId, changeInfo, tab) {
             
             if (tabId === authenticationTab.id) {
-              
+                alert(tab.title); 
                 if(tab.title.indexOf('id_token=') > -1) {
 
                     let tokenKeyValue = tab.title.split(' ',2)[1]; 

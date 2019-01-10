@@ -1,7 +1,7 @@
  
 //if there is current job - show that
 //else show display one 
-
+chrome.storage.local.clear(); 
 (function () {
 
     onAJob().then((jobDetails) => {
@@ -45,9 +45,11 @@ body.addEventListener('click',async function(e){
     if(e.target && e.target.id== 'end-btn'){
             const AUTH_TOKEN = await getAuthToken().catch((err) => { 
             //no AUTH_TOKEN 
-            authenticateWGoogle(); 
+            authenticateWGoogle(); //opens new tab and closes extension
         
         }); 
+            console.log(AUTH_TOKEN);  
+        sendToGoogleSheets();  
     }
     if(e.target && e.target.id=='icon-cancel') {
         
@@ -58,7 +60,28 @@ body.addEventListener('click',async function(e){
     }
  }); 
 
+let SPREADSHEET_ID = '1suoMG9Eng3E2z5uMdUuya1UHAJUySu36eVyujwEcjhM'; 
+let API_KEY = 'AIzaSyDOfRX5NYJib0vU1Hjup3KOQyAJp3dIe3Y'; 
+function sendToGoogleSheets() {
 
+    // var endpoint = https://sheets.googleapis.com/v4/spreadsheets/1suoMG9Eng3E2z5uMdUuya1UHAJUySu36eVyujwEcjhM/values/test!A1:E1:append?valueInputOption=USER_ENTERED
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText); 
+        }
+    };
+    xhttp.open("POST", "https://sheets.googleapis.com/v4/spreadsheets/1suoMG9Eng3E2z5uMdUuya1UHAJUySu36eVyujwEcjhM/values/A1:E1:append?key=eyJhbGciOiJSUzI1NiIsImtpZCI6IjhhYWQ2NmJkZWZjMWI0M2Q4ZGIyN2U2NWUyZTJlZjMwMTg3OWQzZTgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiOTM2MDE0MzkxNDUxLXAwNmhub2ZpOWFhNmpvam5hOGFwZnJ2M3JrajNtdTd0LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiOTM2MDE0MzkxNDUxLXAwNmhub2ZpOWFhNmpvam5hOGFwZnJ2M3JrajNtdTd0LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA1NTYzMzM0OTI0MzYxOTA0MDg3IiwiaWF0IjoxNTQ3MTQzMzg1LCJleHAiOjE1NDcxNDY5ODUsImp0aSI6IjVhMjA4MGEzNTNiYTc1Nzk3NzgxZDIxMmUxNzRiNzRjYTQ5MmM3MzMifQ.UxtZg5DxlpHwXNiXftCBwa9_xvEe4z_r5kL5fIwrQqDRak5dBUrSDslivd-IPeHwYaK9a5tkzSYj58SdNLwrpsY2qyvVJlHETEDF6pmBL4jleCcDdcdBmnlaYX2fAkm5XLB37S-RMAA92qqX9fTReH3t7o6ZSGrsQ_H2nyU3W3wcBt_dozGl-IUvE_RnL4nrp4ycPahO6W4Zb0lmDEwcXMYp", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send();
+// {"range": "test!A1:E1",
+//   "majorDimension": "ROWS",
+//   "values": [
+//     ["Door", "$15", "2", "3/15/2016"],
+//     ["Engine", "$100", "1", "3/20/2016"],
+//   ],
+// }
+}
 
 function getAuthToken() {
    
