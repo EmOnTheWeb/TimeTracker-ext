@@ -1,9 +1,7 @@
- 
 //if there is current job - show that
 //else show display one 
-chrome.storage.local.clear(); 
 (function () {
-
+   
     onAJob().then((jobDetails) => {
 
         displayValues(jobDetails);   
@@ -45,11 +43,19 @@ body.addEventListener('click',async function(e){
     if(e.target && e.target.id== 'end-btn'){
             const AUTH_TOKEN = await getAuthToken().catch((err) => { 
             //no AUTH_TOKEN 
-            authenticateWGoogle(); //opens new tab and closes extension
+            authenticate(); 
+            return; 
         
         }); 
-            console.log(AUTH_TOKEN);  
-        sendToGoogleSheets();  
+          console.log('retrieved auth token', AUTH_TOKEN);
+          var url = 'https://accounts.google.com/o/oauth2/revoke?token=' + AUTH_TOKEN;
+window.fetch(url);
+
+chrome.identity.removeCachedAuthToken({token: AUTH_TOKEN}, function (){
+    
+});
+    
+        sendToGoogleSheets(AUTH_TOKEN);  
     }
     if(e.target && e.target.id=='icon-cancel') {
         
@@ -61,9 +67,14 @@ body.addEventListener('click',async function(e){
  }); 
 
 let SPREADSHEET_ID = '1suoMG9Eng3E2z5uMdUuya1UHAJUySu36eVyujwEcjhM'; 
-let API_KEY = 'AIzaSyDOfRX5NYJib0vU1Hjup3KOQyAJp3dIe3Y'; 
-function sendToGoogleSheets() {
 
+function authenticate() {
+    chrome.extension.getBackgroundPage().authenticateWGoogle(); 
+}
+
+
+function sendToGoogleSheets(token) {
+    console.log('token used in api request',token); 
     // var endpoint = https://sheets.googleapis.com/v4/spreadsheets/1suoMG9Eng3E2z5uMdUuya1UHAJUySu36eVyujwEcjhM/values/test!A1:E1:append?valueInputOption=USER_ENTERED
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -71,9 +82,16 @@ function sendToGoogleSheets() {
           console.log(this.responseText); 
         }
     };
-    xhttp.open("POST", "https://sheets.googleapis.com/v4/spreadsheets/1suoMG9Eng3E2z5uMdUuya1UHAJUySu36eVyujwEcjhM/values/A1:E1:append?key=eyJhbGciOiJSUzI1NiIsImtpZCI6IjhhYWQ2NmJkZWZjMWI0M2Q4ZGIyN2U2NWUyZTJlZjMwMTg3OWQzZTgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiOTM2MDE0MzkxNDUxLXAwNmhub2ZpOWFhNmpvam5hOGFwZnJ2M3JrajNtdTd0LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiOTM2MDE0MzkxNDUxLXAwNmhub2ZpOWFhNmpvam5hOGFwZnJ2M3JrajNtdTd0LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA1NTYzMzM0OTI0MzYxOTA0MDg3IiwiaWF0IjoxNTQ3MTQzMzg1LCJleHAiOjE1NDcxNDY5ODUsImp0aSI6IjVhMjA4MGEzNTNiYTc1Nzk3NzgxZDIxMmUxNzRiNzRjYTQ5MmM3MzMifQ.UxtZg5DxlpHwXNiXftCBwa9_xvEe4z_r5kL5fIwrQqDRak5dBUrSDslivd-IPeHwYaK9a5tkzSYj58SdNLwrpsY2qyvVJlHETEDF6pmBL4jleCcDdcdBmnlaYX2fAkm5XLB37S-RMAA92qqX9fTReH3t7o6ZSGrsQ_H2nyU3W3wcBt_dozGl-IUvE_RnL4nrp4ycPahO6W4Zb0lmDEwcXMYp", true);
+    xhttp.open("POST", "https://sheets.googleapis.com/v4/spreadsheets/1suoMG9Eng3E2z5uMdUuya1UHAJUySu36eVyujwEcjhM/values/A4:E4:append?valueInputOption=USER_ENTERED", true);
     xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
+    xhttp.setRequestHeader('Authorization','Basic ' + token);
+    xhttp.send({"range": "A4:E4",
+        "majorDimension": "ROWS",
+        "values": [
+            ["Door", "$15", "2", "3/15/2016"],
+            ["Engine", "$100", "1", "3/20/2016"],
+             ],
+    });
 // {"range": "test!A1:E1",
 //   "majorDimension": "ROWS",
 //   "values": [
@@ -94,20 +112,15 @@ function getAuthToken() {
 
                 }
                 else {
-                    reject(); 
+                    reject(false); 
                 }
             } else {
-                reject(); 
+                reject(false); 
             } 
         });
     })   
 }
 
-function authenticateWGoogle() {
-
-    chrome.extension.getBackgroundPage().openAuthTab();
-
-}
 
 function saveValues(vals) {
 
